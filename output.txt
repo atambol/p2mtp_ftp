@@ -1,0 +1,493 @@
+
+                                                                        
+Network Working Group                                 /or data), 2) to encourage indirect or implicit (via
+   programs) use of remote computers, 3) to shield a user from
+   variationdel while reviewing the terminology.
+
+
+
+
+
+
+
+Postel & Reynolds                                               [Page 1]
+
+
+        s 264 and 265.  The File Transfer Protocol
+      was now defined as a protocol for file transfer between HOSTs on
+      the ARPA14 continued comments on FTP.  RFC 624
+      proposed further design changes and minor modifications.  In 1975,
+      RFC 686 en  In particular, the following new optional commands are included in
+      this edition of the specification:
+
+         CDUP - Cthorized or accidental use of files.
+         It is the prerogative of a server-FTP process to invoke access
+         controls.
+connection
+
+         A full duplex connection over which data is transferred, in a
+         specified mode and type. The data trerror recovery
+
+         A procedure that allows a user to recover from certain errors
+         such as failure of either host s   described in the Section on Transmission Modes.
+
+      NVT
+
+         The Network Virtual Terminal as defined in the Telnet Pr        protocol have distinct roles implemented in a user-PI and a
+         server-PI.
+
+
+Postel & Reynolds                       establishes the data connection with the "listening" data port.
+         It sets up parameters for transfer and storage, and teen the time
+         of data storage and data transfer.  The representation types
+         defined in FTP are described in the ocol interpreter, a data
+         transfer process and a user interface which together perform
+         the function of file tra      -------------
+                                            |/---------\|
+                                            ||   UER-FTP
+
+      NOTES: 1. The data connection may be used in either direction.
+             2. The data connection need not exist  of file system operation (store, retrieve, append,
+      delete, etc.).  The user-DTP or its designate should "listen" on
+     l connections to the two servers and then arranges for a
+      data connection between them.  In this manner, control informatiolity of the
+      user to request the closing of the control connections when
+      finished using the FTP service, while it is      October 1985
+File Transfer Protocol
+
+
+         argue for the first approach.  In practice, FTP relies on very
+         litt nature
+   of the filler byte depends on the representation type.
+
+   3.1.  DATA REPRESENTATION AND STORAGE
+
+      Data is transnternal representations.
+
+      A different problem in representation arises when transmitting
+      binary data (not character  Transformations desired beyond this limited capability should be
+      performed by the user directly.
+
+      3.1.1.  DATA TYPErily for the transfer
+            of text files, except when both hosts would find the EBCDIC
+            type more convenient.
+                                              
+RFC 959                                                     October 1985
+File Traore the data as contiguous bits.  The structure
+            of the storage system might necessitate the padding of the
+         second parameter, Byte size.
+            The value of Byte size must be a decimal integer; there is
+            no default valueby
+            the FTP implementors.
+
+            For example, a user sending 36-bit floating-point numbers to
+            a hos representation types are defined in FTP:
+
+            A character file may be transferred to a host for one of
+            thre must be
+               accepted by all FTP implementations.
+
+
+
+
+Postel & Reynolds                                               contains ASA (FORTRAN) vertical format control
+               characters.  (See RFC 740 Appendix C; and Communications
+        a file
+               has record structure (see below) this is no problem;
+               records will be explicitly marked duriof data bytes,
+
+            record-structure,   where the file is made up of sequential
+                                records,es between such disparate
+         sites is to be useful, there must be some way for one site to
+         recognize the other's he FTP implementation should use the end-of-line sequence,
+
+
+Postel & Reynolds                                              [Pag implementations.
+
+            In record-structure the file is made up of sequential
+            records.
+
+         3.1.2.3.  PA   The logical page number of this section of the file.
+                  This is not the transmission sequence number of this
+                    This is the normal type for simple paged files
+                        with no page level associated control
+e page structure.
+
+      A note of caution about parameters:  a file must be stored and
+      retrieved with the same parameters  data port is the port adjacent to the control connection port
+      (i.e., L-1).
+
+      The transfer byte size is 8-bit bytes.rt by
+      use of the PORT command.  The user may want a file dumped on a TAC
+      line printer or retrieved from a third part85
+File Transfer Protocol
+
+
+      is when the user-DTP is sending the data in a transfer mode that
+      requires the connections.
+
+      Negotiating Non-Default Data Ports:   The User-PI may specify a
+      non-default user side data port with the PORT co port.  The second is to use another
+         transfer mode.
+
+         A comment on transfer modes.  The stream transfer mode is and allows for restart procedures; one which also
+      compresses the data for efficient transfer; and one which passes
+      bed by the transfer mode and file
+      structure, and the receiving host will perform the inverse
+      translation to its integ transmission modes are defined in FTP:
+
+      3.4.1.  STREAM MODE
+
+         The data is transmitted as a stream of bytes.  Theta connection and all bytes are
+         data bytes.
+
+      3.4.2.  BLOCK MODE
+
+         The file is transmitted as a series of icate in the transmission that certain
+         portions are suspect).  Record structures are allowed in this
+         mode, and   descriptor byte.  Four codes have been assigned, where each
+         code number is the decimal value of the corresponding bi-----+
+            |Descrptr|  Byte count     |
+            |code= 16|             = 6 |
+            +--------+--------+-------- data are sent, these n bytes are preceded by a byte with the
+         left-most bit set to 0 and the right-most 7 bits containi-+-+-+
+
+         A string of n filler bytes can be compressed into a single
+         byte, where the filler byte varies with thestring of bytes.
+
+         Compressed mode is useful for obtaining increased bandwidth on
+         very large network transmissiontrol connection (ASCII or EBCDIC).
+      The marker could represent a bit-count, a record-count, or any
+      other informatiof a system failure, the user
+      or controller process restarts the server at the last server
+      marker by sending a restarhe
+   data connection and transfer the data.  If the second party to the
+   data transfer (the passive transfer process) is the me servers may require
+            this).  Additional identification information in the form of
+            a password and/or an
+            password.  This command must be immediately preceded by the
+            user name command, and, for some sites, comormation is required for login,
+            the response to a successful PASSword command is reply code
+            332.  On the      This command is a special case of CWD, and is included to
+            simplify the implementation of programs for transferIZE (REIN)
+
+            This command terminates a USER, flushing all I/O and account
+            information, except to allow and close on the control connection will cause the
+            server to take the effective action of an abort (ABOR) and a
+      ile Transfer Protocol
+
+
+         DATA PORT (PORT)
+
+            The argument is a HOST-PORT specification for the data port
+      wait for a
+            connection rather than initiate one upon receipt of a
+            transfer command.  The response to thi              /    \
+               I - Image
+               
+               L <byte size> - Local byte Byte size
+
+
+Postel & Rey   TRANSFER MODE (MODE)
+
+            The argument is a single Telnet character code specifying
+            the data transfer mod "rename from" command must be
+         followed by a "rename to" command and the restart command must
+         be followed by tis command causes the server-DTP to accept the data
+            transferred via the data connection and to store the data as
+   ver site, then the data shall be
+            appended to that file; otherwise the file specified in the
+            pathname shand argument is optional, but when
+            present should be separated from the first by the three
+            Telnet charact    This command specifies the old pathname of the file which is
+            to be renamed.  This command must be immediately foare two cases for the server upon receipt of this
+            command: (1) the FTP service command was already completed,
+         DELETE (DELE)
+
+            This command causes the file specified in the pathname to be
+            deleted at the server sitirectory to be returned in the reply.  See Appendix II.
+
+         LIST (LIST)
+
+            This command causes a list to be sentrom system
+            to system, this information may be hard to use automatically
+            in a program, but may be quite u
+            This command is used by the server to provide services
+            specific to his system that are essential to filhe status of the
+            operation in progress, or it may be sent between file
+            transfers.  In the latter case, t
+
+            This command shall cause the server to send helpful
+            information regarding its implementation status ovthe
+   "Telnet language" and the corresponding "Telnet end-of-line code".
+   Currently, one may take these to mean NVT-ASCII andwhile a data transfer is in progress.  Some
+
+
+Postel & Reynolds                                              [Page 34]
+
+
+      File Transfer Protocol commands are devised to ensure
+      the synchronization of requests and actions in the process of file
+ y automata to determine what state to enter
+      next; the text is intended for the human user.  It is intended
+      that the  complete text must be bracketed
+      so the User-process knows when it may stop reading the reply (i.e.
+      stop processing First line
+                                Second line
+                                  234 A line beginning with numbers
+     digits of the reply each have a special significance.
+      This is intended to allow a range of very simple to very
+      sophie values for the first digit of the reply code:
+
+            1yz   Positive Preliminary reply
+
+               The requested actiyz   Positive Intermediate reply
+
+               The command has been accepted, but the requested action
+               is beingtel & Reynolds                                              [Page 37]
+
+
+                                                                      repeating the exact request (in the same sequence).  Even
+               some "permanent" error conditions can beies for the login
+                  process and accounting procedures.
+
+            x4z   Unspecified as yet.
+
+            x5z   last section;
+         that is, Server implementations should not invent new codes for
+         situations that are only slight A refinement of that is the 504 reply for a command
+            that is implemented, but that requests an unimplemented
+              MARK yyyy = mmmm
+             Where yyyy is User-process data stream marker, and mmmm
+             server's equivalent mansfer starting.
+         225 Data connection open; no transfer in progress.
+         425 Can't open data connection.
+         22further information.
+         450 Requested file action not taken.
+             File unavailable (e.g., file busy).
+         550etween markers
+             and "=").
+         120 Service ready in nnn minutes.
+         125 Data connection already open; tranService ready for new user.
+         221 Service closing control connection.
+             Logged out if appropriate.
+         22451 Requested action aborted: local error in processing.
+         452 Requested action not taken.
+             Insufficient stor storage allocation (for current directory or
+             dataset).
+         553 Requested action not taken.
+             File                       October 1985
+File Transfer Protocol
+
+
+   5.2.  CONNECTIONS
+
+      The server protocol interpreter shall "lthe FTP
+      service command.
+
+      Note that all FTP implementation must support data transfer using
+      the default port, lly synchronous but
+      horizontally asynchronous:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Postel & Reynolds                                             e data connection is to be closed following a
+      data transfer where closing the connection is not required to
+      indicateommands are Telnet character strings transmitted over the
+      control connections as described in the Section on FTP Commands.meter values,
+      such as A or a for ASCII TYPE.  The command codes and the argument
+      fields are separated by one or more                                   October 1985
+File Transfer Protocol
+
+
+      5.3.1.  FTP COMMANDS
+
+         The following are > <pathname> <CRLF>
+            RMD  <SP> <pathname> <CRLF>
+            MKD  <SP> <pathname> <CRLF>
+            PWD  <CRLF>
+    LF>
+            <marker> ::= <pr-string>
+            <pr-string> ::= <pr-char> | <pr-char><pr-string>
+            <pr-char> ::= 
+RFC 959                                                     October 1985
+File Transfer Protocol
+
+
+   5.4.  SEQUENCING OF COMMANny
+      commands.  If the server is unable to accept input right away, a
+      120 "expected delay" reply should be sent immedie altered.
+
+      Command-Reply Sequences
+
+         In this section, the command-reply sequence is presented.  Each
+         com                  500, 501, 421
+                  331, 332
+               PASS
+                  230
+                  202
+             October 1985
+File Transfer Protocol
+
+
+            Transfer parameters
+               PORT
+                  200
+                  226, 250
+                     425, 426, 451, 551, 552
+                  532, 450, 452, 553
+                  500, 501,               226, 250
+                     425, 426, 451, 551, 552
+                  532, 450, 550, 452, 553
+                                          October 1985
+File Transfer Protocol
+
+
+            Informational commands
+               SYST
+          te diagram for each group of FTP commands or command
+   sequences.
+
+   The command groupings were determined by constructing a mgram models the commands:
+
+         ABOR, ALLO, DELE, CWD, CDUP, SMNT, HELP, MODE, NOOP, PASV,
+         QUIT, SITE, PORT, SYST, PE, LIST, NLST, REIN, RETR, STOR, and STOU.
+
+   Note that this second model could also be used to represent the first
+   group o 4,5 ----->+---+
+      |   |---------->| W |---------->| F |
+      +---+           +---+           +---+
+      
+
+
+Postel & Reyno      +---+
+                  |      |
+                  |  1   |
+                   ------
+      
+
+         Where "cmd" is APPE 4,5   | | |
+         --------------   -----  | | |
+        |                      | | | |
+        |                      | | |                                        October 1985
+File Transfer Protocol
+
+
+   Finally, we present a generalized diagram that c            |
+              V
+             End
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Postel & Reynolds                                 --->
+                                     <---- 331 User name ok,
+                                               need password<Clocal type) image<CR>
+      (local pathname) file dump<CR> User-FTP opens local file in Image.
+      (for.pathname) >udd>cn>fd<Ceen TOPS-20
+   systems, particularly the files used by NLS.
+
+   The file system of TOPS-20 is based on the concept of pages.  Th12 words of 36 bits each.
+
+   The attributes of the file, in the File Descriptor Block (FDB),
+   contain such things as creation                                                
+RFC 959                                                     October 1985
+File T for what type of chunk this is.  A data page is type 3,
+         the FDB page is type 2.
+
+      Word 4: Page Access Control.
+
+ e commands which deal with
+   the creation of directories.  Since there are other hosts on the
+   ARPA-Internet which have tree-
+      simplify the implementation of programs for transferring directory
+      trees between operating systems having differentce
+
+         MKD MYDIR
+         CWD MYDIR
+
+      will fail.  The new directory may only be referred to by its
+      "absolute" nThe directory name can
+      contain any character; embedded double-quotes should be escaped by
+      double-quotes (the "quote- /usr/dm
+         200 directory changed to /usr/dm
+         MKD pathname
+         521-"/usr/dm/pathname" directory already exist     example of its use in the TOPS-20 world:
+
+         CWD <some.where>
+         200 Working directory changed
+         MKD ove Note also that
+      in the first example the user "violated" the protocol by
+      attempting to access the freshly created dirotocol
+
+
+APPENDIX III - RFCs on FTP
+
+   Bhushan, Abhay, "A File Transfer Protocol", RFC 114 (NIC 5823),
+   MIT-Project MAC, 16 tocol (RFC 354)",
+   RFC 385 (NIC 11357), MIT-Project MAC, 18 August 1972.
+
+   Hicks, Greg, "User FTP Documentation", RFC 412 (N8
+   (NIC 14378), BBN-NET and BBN-TENEX, 20 February 1973.
+
+   Neigus, Nancy, "File Transfer Protocol", RFC 542 (NIC 17759), BBN-TENEX, 26 March 1973.
+
+   White, Jim, "Use of FTP by the NIC Journal", RFC 479 (NIC 14948),
+   SRI-ARC, 8 March 1973.
+
+   White 1973.
+
+   Sussman, Julie, "FTP Error Code Usage for More Reliable Mail
+   Service", RFC 630 (NIC 30237), BBN, 10 April 1974.
+
+ RE,
+   July 1985.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Postel & Reynolds                                              [Page 68]
+
+
+                    
