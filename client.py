@@ -54,7 +54,7 @@ def rdt_send(ip, port, pdu):
 script_name, file_path, mss = sys.argv
 mss = int(mss)
 
-timeout = 3
+timeout = 5
 sequence_number = 0
 socket_buffer = mss + 64
 
