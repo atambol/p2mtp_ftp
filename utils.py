@@ -118,8 +118,7 @@ class ReceivePDU(PDU):
     # category : 'data' or 'ack'
     def __init__(self, data):
         PDU.__init__(self)
-        self.validate_checksum(data)
-
+        self.data = data
         self.b_sequence_number = data[:32]
         self.b_packet_category = data[32:48]
         self.checksum = data[48:64]
@@ -147,7 +146,11 @@ class ReceivePDU(PDU):
         else:
             raise Exception("Invalid packet category '%s'" % self.b_packet_category)
 
-    def validate_checksum(self, data):
-        checksum = self.binary_addition(data)
+    def checksum_valid(self):
+        checksum = self.binary_addition(self.data)
         if "0" in checksum:
-            raise Exception("validate_checksum failed for - \n%s" % self.display())
+            print("checksum_valid failed for %s" % self.sequence_number)
+            return False
+        else:
+            return True
+

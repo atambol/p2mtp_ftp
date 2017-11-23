@@ -18,33 +18,32 @@ def p2mp_ftp_send(recipients, file_chunks):
         pdu = SendPDU(file_chunk, 'data')
         for recipient in recipients:
             rdt_send(recipient[0], recipient[1], pdu)
+        print "Packet #%05d : Acknowledged" % pdu.sequence_number
 
 
 def rdt_send(ip, port, pdu):
     data_sent = False
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    client_socket.settimeout(5)
+    client_socket.settimeout(timeout)
     while not data_sent:
         try:
             client_socket.sendto(pdu.encode(), (ip, port))
-            print len(pdu.b_payload)
             data, server = client_socket.recvfrom(socket_buffer)
             ack = ReceivePDU(data)
             if ack.sequence_number == pdu.sequence_number:
                 data_sent = True
-                print "Got ack for %d" % ack.sequence_number
         except socket.timeout:
-            print 'rdt_send timeout for %s,%s' % (ip, port)
+            print 'Packet #%05d : Acknowledgement timeout %s:%s' % (pdu.sequence_number, ip, port)
 
 
 script_name, file_path, mss = sys.argv
 mss = int(mss)
 
-timeout = 5
+timeout = 3
 sequence_number = 0
 socket_buffer = mss + 64
 
-recipients = [["localhost", 7735]]
+recipients = [["localhost", 60000], ["localhost", 60001]]
 
 file_chunks = get_file_chunks(file_path, mss)
 p2mp_ftp_send(recipients, file_chunks)
