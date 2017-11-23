@@ -27,6 +27,7 @@ def rdt_send(ip, port, pdu):
     while not data_sent:
         try:
             client_socket.sendto(pdu.encode(), (ip, port))
+            print len(pdu.b_payload)
             data, server = client_socket.recvfrom(socket_buffer)
             ack = ReceivePDU(data)
             if ack.sequence_number == pdu.sequence_number:

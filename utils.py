@@ -34,7 +34,7 @@ class PDU:
         self.checksum = ''
 
     @staticmethod
-    def binary_addition(b1, b2):
+    def add_two_2bytes(b1, b2):
         if len(b1) == PDU.crc_order and len(b2) == PDU.crc_order:
             bsum = ["0"] * PDU.crc_order
             carry = "0"
@@ -43,18 +43,22 @@ class PDU:
             if carry == "1":
                 carry = ["0"] * PDU.crc_order
                 carry[-1] = "1"
-                return PDU.binary_addition(bsum, carry)
+                return PDU.add_two_2bytes(bsum, carry)
             else:
                 return bsum
         else:
-            raise Exception("binary_addition failed as the bits were not of length %s" % PDU.crc_order)
+            raise Exception("add_two_2bytes failed as the bits were not of length %s" % PDU.crc_order)
 
     # data is a binary string of length of multiple of crc_order
-    def calculate_checksum(self, data):
+    def binary_addition(self, data):
         checksum = '0'*PDU.crc_order
         for offset in range(len(data)/PDU.crc_order):
             two_bytes = data[offset * PDU.crc_order:(offset + 1) * PDU.crc_order]
-            checksum = self.binary_addition(two_bytes, checksum)
+            checksum = self.add_two_2bytes(two_bytes, checksum)
+        return checksum
+
+    @staticmethod
+    def calculate_ones_complement(checksum):
         for i in range(len(checksum)):
             if checksum[i] == "0":
                 checksum[i] = "1"
@@ -86,17 +90,14 @@ class SendPDU(PDU):
         self.b_payload = self.get_b_payload()
         self.b_sequence_number = '{:032b}'.format(self.sequence_number)
         self.b_packet_category = self.get_b_packet_category()
-
-        self.checksum = self.calculate_checksum(self.b_sequence_number + self.b_packet_category + self.b_payload)
+        self.checksum = self.calculate_checksum()
 
     def get_b_payload(self):
         return ''.join('{0:08b}'.format(ord(x), 'b') for x in self.payload)
 
-    def get_sequence_number(self):
-        try:
-            PDU.sequence_counter += 1
-        except Exception:
-            PDU.sequence_counter = 1
+    @staticmethod
+    def get_sequence_number():
+        PDU.sequence_counter += 1
         return PDU.sequence_counter
 
     def get_b_packet_category(self):
@@ -106,6 +107,10 @@ class SendPDU(PDU):
             return '1010101010101010'
         else:
             raise Exception("Invalid packet category '%s'" % self.packet_category)
+
+    def calculate_checksum(self):
+        addition = self.binary_addition(self.b_sequence_number + self.b_packet_category + self.b_payload)
+        return self.calculate_ones_complement(addition)
 
 
 class ReceivePDU(PDU):
@@ -143,5 +148,6 @@ class ReceivePDU(PDU):
             raise Exception("Invalid packet category '%s'" % self.b_packet_category)
 
     def validate_checksum(self, data):
-        checksum = self.calculate_checksum(data)
-        print(checksum)
+        checksum = self.binary_addition(data)
+        if "0" in checksum:
+            raise Exception("validate_checksum failed for - \n%s" % self.display())

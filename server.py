@@ -7,7 +7,7 @@ def p2mp_ftp_receive():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("localhost", 7735))
     while True:
-        data, address = sock.recvfrom(socket_buffer)
+        data, address = sock.recvfrom(socket_buffer*8)
         pdu = ReceivePDU(data)
         f = open(file_path, 'ab')
         f.write(pdu.payload)
