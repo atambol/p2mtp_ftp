@@ -73,7 +73,7 @@ class PDU:
               (self.sequence_number, self.packet_category, self.payload)
 
     def encode(self):
-        return "".join([self.b_sequence_number, self.b_packet_category, self.checksum, self.b_payload])
+        return "".join([self.b_sequence_number, self.checksum, self.b_packet_category, self.b_payload])
 
 
 class SendPDU(PDU):
@@ -120,8 +120,8 @@ class ReceivePDU(PDU):
         PDU.__init__(self)
         self.data = data
         self.b_sequence_number = data[:32]
-        self.b_packet_category = data[32:48]
-        self.checksum = data[48:64]
+        self.checksum = data[32:48]
+        self.b_packet_category = data[48:64]
         self.b_payload = data[64:]
 
         self.payload = self.get_payload()

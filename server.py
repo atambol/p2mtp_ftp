@@ -36,7 +36,7 @@ script_name, file_path, probability, port = sys.argv
 if os.path.isfile(file_path):
     os.remove(file_path)
 probability = float(probability)
-assert 1.0 > probability > 0.0
+assert 1.0 > probability > 0.0, 'probability should be within open interval (0,1)'
 probability_matrix = [True]*int(probability*100) + [False]*(100-int(probability*100))
 timeout = 60
 sequence_number = 0

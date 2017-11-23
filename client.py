@@ -1,6 +1,7 @@
 import sys
 import socket
 from utils import *
+import threading
 
 
 def get_file_chunks(file_path, mss):
@@ -16,8 +17,22 @@ def get_file_chunks(file_path, mss):
 def p2mp_ftp_send(recipients, file_chunks):
     for file_chunk in file_chunks:
         pdu = SendPDU(file_chunk, 'data')
+        threads = []
         for recipient in recipients:
-            rdt_send(recipient[0], recipient[1], pdu)
+            thread = threading.Thread(target=rdt_send, args=(recipient[0], recipient[1], pdu,))
+            thread.daemon = False
+            threads.append(thread)
+        for thread in threads:
+            thread.start()
+
+        pdu_sent = False
+        while not pdu_sent:
+            pdu_sent = True
+            for thread in threads:
+                if thread.isAlive():
+                    pdu_sent = False
+                    break
+
         print "Packet #%05d : Acknowledged" % pdu.sequence_number
 
 
