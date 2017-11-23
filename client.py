@@ -19,7 +19,7 @@ def p2mp_ftp_send(recipients, file_chunks):
         pdu = SendPDU(file_chunk, 'data')
         threads = []
         for recipient in recipients:
-            thread = threading.Thread(target=rdt_send, args=(recipient[0], recipient[1], pdu,))
+            thread = threading.Thread(target=rdt_send, args=(recipient, port, pdu,))
             thread.daemon = True
             threads.append(thread)
         for thread in threads:
@@ -53,14 +53,15 @@ def rdt_send(ip, port, pdu):
             print '#%05d : [%s, %s] : Acknowledgement timeout' % (pdu.sequence_number, ip, port)
 
 
-script_name, file_path, mss = sys.argv
-mss = int(mss)
+assert len(sys.argv) > 4, "Usage: %s <space separated server list> <port> <file path> <MSS>" % sys.argv[0]
+port = int(sys.argv[-3])
+file_path = sys.argv[-2]
+mss = int(sys.argv[-1])
+recipients = [x for x in sys.argv[1:-3]]
 
 timeout = 5
 sequence_number = 0
 socket_buffer = mss + 64
-
-recipients = [["localhost", 60000], ["localhost", 60001]]
 
 file_chunks = get_file_chunks(file_path, mss)
 p2mp_ftp_send(recipients, file_chunks)

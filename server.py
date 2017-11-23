@@ -12,7 +12,7 @@ def probabilistic_loss():
 def p2mp_ftp_receive():
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_sock.settimeout(timeout)
-    server_sock.bind(("localhost", int(port)))
+    server_sock.bind(("localhost", 7735))
     sequence_number = 0
     while True:
         data, address = server_sock.recvfrom(socket_buffer*8)
@@ -36,7 +36,8 @@ def p2mp_ftp_receive():
 
 
 socket_buffer = 1024 + 64
-script_name, file_path, probability, port = sys.argv
+assert len(sys.argv) > 2, "Usage: %s <file path> <PDU loss probability>" % sys.argv[0]
+file_path, probability = sys.argv[1], sys.argv[2]
 if os.path.isfile(file_path):
     os.remove(file_path)
 probability = float(probability)
