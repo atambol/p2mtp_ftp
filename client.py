@@ -20,7 +20,7 @@ def p2mp_ftp_send(recipients, file_chunks):
         threads = []
         for recipient in recipients:
             thread = threading.Thread(target=rdt_send, args=(recipient[0], recipient[1], pdu,))
-            thread.daemon = False
+            thread.daemon = True
             threads.append(thread)
         for thread in threads:
             thread.start()
@@ -33,8 +33,6 @@ def p2mp_ftp_send(recipients, file_chunks):
                     pdu_sent = False
                     break
 
-        print "Packet #%05d : Acknowledged" % pdu.sequence_number
-
 
 def rdt_send(ip, port, pdu):
     data_sent = False
@@ -43,12 +41,16 @@ def rdt_send(ip, port, pdu):
     while not data_sent:
         try:
             client_socket.sendto(pdu.encode(), (ip, port))
+            print "#%05d : [%s, %s] : Sent" % (pdu.sequence_number, ip, port)
             data, server = client_socket.recvfrom(socket_buffer)
             ack = ReceivePDU(data)
             if ack.sequence_number == pdu.sequence_number:
                 data_sent = True
+                print "#%05d : [%s, %s] : Acknowledged" % (ack.sequence_number, ip, port)
+            else:
+                print "#%05d : [%s, %s] : Out-of-order acknowledgement" % (ack.sequence_number, ip, port)
         except socket.timeout:
-            print 'Packet #%05d : Acknowledgement timeout %s:%s' % (pdu.sequence_number, ip, port)
+            print '#%05d : [%s, %s] : Acknowledgement timeout' % (pdu.sequence_number, ip, port)
 
 
 script_name, file_path, mss = sys.argv
