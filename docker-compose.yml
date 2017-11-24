@@ -1,0 +1,9 @@
+version: '2'
+services:
+    server1:
+        build: .
+        container_name: server1
+        image: csc573:v1
+        ports:
+            - 60000:7735
+        tty: true
