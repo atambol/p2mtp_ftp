@@ -60,7 +60,7 @@ file_path = sys.argv[-2]
 mss = int(sys.argv[-1])
 recipients = [x for x in sys.argv[1:-3]]
 
-timeout = 5
+timeout = 0.1
 sequence_number = 0
 socket_buffer = mss + 64
 

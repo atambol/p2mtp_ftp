@@ -12,7 +12,7 @@ def probabilistic_loss():
 def p2mp_ftp_receive():
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_sock.settimeout(timeout)
-    server_sock.bind(("localhost", port))
+    server_sock.bind(("0.0.0.0", port))
     sequence_number = 0
     while True:
         data, address = server_sock.recvfrom(socket_buffer*8)
