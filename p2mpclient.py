@@ -41,19 +41,20 @@ def rdt_send(ip, port, pdu):
     while not data_sent:
         try:
             client_socket.sendto(pdu.encode(), (ip, port))
-            print "#%05d : [%s, %s] : Sent" % (pdu.sequence_number, ip, port)
+            # print "#%05d : [%s, %s] : Sent" % (pdu.sequence_number, ip, port)
             data, server = client_socket.recvfrom(socket_buffer)
             ack = ReceivePDU(data)
             if ack.sequence_number == pdu.sequence_number:
                 data_sent = True
-                print "#%05d : [%s, %s] : Acknowledged" % (ack.sequence_number, ip, port)
-            else:
-                print "#%05d : [%s, %s] : Out-of-order acknowledgement" % (ack.sequence_number, ip, port)
+                # print "#%05d : [%s, %s] : Acknowledged" % (ack.sequence_number, ip, port)
+            # else:
+            #     print "#%05d : [%s, %s] : Out-of-order acknowledgement" % (ack.sequence_number, ip, port)
         except socket.timeout:
-            print '#%05d : [%s, %s] : Acknowledgement timeout' % (pdu.sequence_number, ip, port)
+            # print '#%05d : [%s, %s] : Acknowledgement timeout' % (pdu.sequence_number, ip, port)
+            print "Timeout, sequence number = %05d" % pdu.sequence_number
 
 
-assert len(sys.argv) > 4, "Usage: %s <space separated server list> <port> <file path> <MSS>" % sys.argv[0]
+assert len(sys.argv) > 4, "Usage: %s server-list server-port# file-name MSS" % sys.argv[0]
 port = int(sys.argv[-3])
 file_path = sys.argv[-2]
 mss = int(sys.argv[-1])
